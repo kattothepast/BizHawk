@@ -1105,6 +1105,11 @@ namespace BizHawk.Client.EmuHawk
 			OpenLuaConsole();
 		}
 
+		private void JsConsoleMenuItem_Click(object sender, EventArgs e)
+		{
+			OpenJsConsole();
+		}
+
 		private void TAStudioMenuItem_Click(object sender, EventArgs e)
 		{
 			if (!Emulator.CanPollInput())

@@ -1,6 +1,10 @@
 <Project>
 	<Import Project="TestProjects.props" />
 	<PropertyGroup>
+		<ClearScriptLinuxNative Condition="'$(NuGetPackageRoot)' != ''">$(NuGetPackageRoot)/microsoft.clearscript.v8.native.linux-x64/7.5.0/runtimes/linux-x64/native/ClearScriptV8.linux-x64.so</ClearScriptLinuxNative>
+		<ClearScriptWinNative Condition="'$(NuGetPackageRoot)' != ''">$(NuGetPackageRoot)/microsoft.clearscript.v8.native.win-x64/7.5.0/runtimes/win-x64/native/ClearScriptV8.win-x64.dll</ClearScriptWinNative>
+	</PropertyGroup>
+	<PropertyGroup>
 		<DefineConstants Condition=" '$(ContinuousIntegrationBuild)' == 'true' ">$(DefineConstants);SKIP_PLATFORM_TESTS</DefineConstants>
 		<MSTestAnalysisMode>All</MSTestAnalysisMode>
 		<RunSettingsFilePath>$(MSBuildProjectDirectory)/../MainSln.runsettings</RunSettingsFilePath>
@@ -10,6 +14,13 @@
 		<None Include="$(ProjectDir)../../Assets/dll/lua54.dll" CopyToOutputDirectory="PreserveNewest" />
 		<None Include="$(ProjectDir)../../Assets/dll/libbizhash.*" CopyToOutputDirectory="PreserveNewest" />
 		<None Include="$(ProjectDir)../../Assets/dll/libzstd.*" CopyToOutputDirectory="PreserveNewest" />
+		<!-- ClearScript V8 natives for JS scripting tests (linux package has no net48 props). -->
+		<None Include="$(ClearScriptLinuxNative)"
+			Condition="'$(ClearScriptLinuxNative)' != '' AND Exists('$(ClearScriptLinuxNative)')"
+			CopyToOutputDirectory="PreserveNewest" />
+		<None Include="$(ClearScriptWinNative)"
+			Condition="'$(ClearScriptWinNative)' != '' AND Exists('$(ClearScriptWinNative)')"
+			CopyToOutputDirectory="PreserveNewest" />
 		<Using Include="BizHawk.Tests" />
 		<Using Include="System.Diagnostics.CodeAnalysis" />
 	</ItemGroup>

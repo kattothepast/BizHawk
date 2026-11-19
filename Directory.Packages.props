@@ -12,6 +12,9 @@
 		<PackageVersion Include="Meziantou.Polyfill" Version="1.0.168" />
 		<PackageVersion Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
 		<PackageVersion Include="Microsoft.Bcl.Numerics" Version="10.0.1" />
+		<PackageVersion Include="Microsoft.ClearScript.V8" Version="7.5.0" />
+		<PackageVersion Include="Microsoft.ClearScript.V8.Native.linux-x64" Version="7.5.0" />
+		<PackageVersion Include="Microsoft.ClearScript.V8.Native.win-x64" Version="7.5.0" />
 		<PackageVersion Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.4" />
 		<PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.0" />
 		<PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="5.0" />

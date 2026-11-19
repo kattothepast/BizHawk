@@ -198,6 +198,7 @@ namespace BizHawk.Client.EmuHawk
 			this.RamWatchMenuItem = new BizHawk.WinForms.Controls.ToolStripMenuItemEx();
 			this.RamSearchMenuItem = new BizHawk.WinForms.Controls.ToolStripMenuItemEx();
 			this.LuaConsoleMenuItem = new BizHawk.WinForms.Controls.ToolStripMenuItemEx();
+			this.JsConsoleMenuItem = new BizHawk.WinForms.Controls.ToolStripMenuItemEx();
 			this.TAStudioMenuItem = new BizHawk.WinForms.Controls.ToolStripMenuItemEx();
 			this.HexEditorMenuItem = new BizHawk.WinForms.Controls.ToolStripMenuItemEx();
 			this.TraceLoggerMenuItem = new BizHawk.WinForms.Controls.ToolStripMenuItemEx();
@@ -1352,6 +1353,7 @@ namespace BizHawk.Client.EmuHawk
             this.RamWatchMenuItem,
             this.RamSearchMenuItem,
             this.LuaConsoleMenuItem,
+            this.JsConsoleMenuItem,
             this.TAStudioMenuItem,
             this.HexEditorMenuItem,
             this.TraceLoggerMenuItem,
@@ -1390,6 +1392,11 @@ namespace BizHawk.Client.EmuHawk
 			// 
 			this.LuaConsoleMenuItem.Text = "Lua Console";
 			this.LuaConsoleMenuItem.Click += new System.EventHandler(this.LuaConsoleMenuItem_Click);
+			// 
+			// JsConsoleMenuItem
+			// 
+			this.JsConsoleMenuItem.Text = "JS Console";
+			this.JsConsoleMenuItem.Click += new System.EventHandler(this.JsConsoleMenuItem_Click);
 			// 
 			// TAStudioMenuItem
 			// 
@@ -2487,6 +2494,7 @@ namespace BizHawk.Client.EmuHawk
 		private BizHawk.WinForms.Controls.ToolStripMenuItemEx DisplayInputMenuItem;
 		private BizHawk.WinForms.Controls.ToolStripMenuItemEx DisplayLagCounterMenuItem;
 		private BizHawk.WinForms.Controls.ToolStripMenuItemEx LuaConsoleMenuItem;
+		private BizHawk.WinForms.Controls.ToolStripMenuItemEx JsConsoleMenuItem;
 		private BizHawk.WinForms.Controls.ToolStripMenuItemEx RecentRomSubMenu;
 		private BizHawk.WinForms.Controls.ToolStripSeparatorEx toolStripSeparator3;
 		private BizHawk.WinForms.Controls.ToolStripSeparatorEx toolStripSeparator4;

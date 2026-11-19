@@ -16,5 +16,8 @@
 		<None Include="$(ProjectDir)/lua/scripts/**/*">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
+		<None Include="$(ProjectDir)/js/scripts/**/*">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 </Project>

@@ -1018,6 +1018,10 @@ namespace BizHawk.Client.EmuHawk
 				{
 					Tools.LuaConsole.ResumeScripts(false);
 				}
+				if (Tools.Has<JsConsole>())
+				{
+					Tools.JsConsole.ResumeScripts(false);
+				}
 				// ext. tools don't yield per se, so just send them a GeneralUpdate
 				Tools.GeneralUpdateActiveExtTools();
 
@@ -1590,6 +1594,22 @@ namespace BizHawk.Client.EmuHawk
 			}
 
 			Tools.Load<LuaConsole>();
+		}
+
+		private void OpenJsConsole()
+		{
+			if (!JsLibraries.IsAvailable)
+			{
+				ShowMessageBox(
+					owner: null,
+					text: "ClearScript V8 was unable to be loaded. Ensure ClearScriptV8 natives are present under dll/ "
+						+ $"(win-x64 and linux-x64). Details:\n{JsLibraries.AvailabilityError}",
+					caption: "JS Load Error",
+					EMsgBoxIcon.Error);
+				return;
+			}
+
+			Tools.Load<JsConsole>();
 		}
 
 		public void ClickSpeedItem(int num)
@@ -4072,6 +4092,7 @@ namespace BizHawk.Client.EmuHawk
 			RA?.OnLoadState(path);
 
 			if (Tools.Has<LuaConsole>()) Tools.LuaConsole.CallStateLoadCallbacks(userFriendlyStateName);
+			if (Tools.Has<JsConsole>()) Tools.JsConsole.CallStateLoadCallbacks(userFriendlyStateName);
 
 			SetMainformMovieInfo();
 			UpdateToolsAfter();
@@ -4158,6 +4179,10 @@ namespace BizHawk.Client.EmuHawk
 				if (Tools.Has<LuaConsole>())
 				{
 					Tools.LuaConsole.CallStateSaveCallbacks(userFriendlyStateName);
+				}
+				if (Tools.Has<JsConsole>())
+				{
+					Tools.JsConsole.CallStateSaveCallbacks(userFriendlyStateName);
 				}
 
 				if (!suppressOSD)

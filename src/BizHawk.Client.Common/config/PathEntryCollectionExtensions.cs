@@ -166,6 +166,12 @@ namespace BizHawk.Client.Common
 			return collection.AbsolutePathFor(path, null);
 		}
 
+		public static string JsAbsolutePath(this PathEntryCollection collection)
+		{
+			var path = collection[PathEntryCollection.GLOBAL, "JS"].Path;
+			return collection.AbsolutePathFor(path, null);
+		}
+
 		public static string FirmwareAbsolutePath(this PathEntryCollection collection)
 		{
 			return collection.AbsolutePathFor(collection.FirmwarePathFragment, null);
