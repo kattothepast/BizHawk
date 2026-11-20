@@ -33,6 +33,8 @@ namespace BizHawk.Client.Common
 
 		private static ApiContainer? _luaContainer;
 
+		private static ApiContainer? _jsContainer;
+
 		private static ApiContainer Register(
 			IEmulatorServiceProvider serviceProvider,
 			Action<string> logCallback,
@@ -103,6 +105,24 @@ namespace BizHawk.Client.Common
 			_luaContainer?.Dispose();
 			_luaContainer = Register(serviceProvider, logCallback, mainForm, displayManager, inputManager, movieSession, toolManager, config, emulator, game, dialogController);
 			return _luaContainer;
+		}
+
+		public static ApiContainer RestartJs(
+			IEmulatorServiceProvider serviceProvider,
+			Action<string> logCallback,
+			IMainFormForApi mainForm,
+			DisplayManagerBase displayManager,
+			InputManager inputManager,
+			IMovieSession movieSession,
+			IToolLoader toolManager,
+			Config config,
+			IEmulator emulator,
+			IGameInfo game,
+			IDialogController dialogController)
+		{
+			_jsContainer?.Dispose();
+			_jsContainer = Register(serviceProvider, logCallback, mainForm, displayManager, inputManager, movieSession, toolManager, config, emulator, game, dialogController);
+			return _jsContainer;
 		}
 	}
 }

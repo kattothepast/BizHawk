@@ -97,8 +97,9 @@ namespace BizHawk.Client.EmuHawk
 			if (form is not ToolFormBase tool) return;
 			tool.SetToolFormBaseProps(_displayManager, _inputManager, _owner, _movieSession, this, _game);
 
-			// Lua is a special case, being the only tool that currently uses this.
+			// Lua/JS are special cases, being the only tools that currently use this.
 			if (form is LuaConsole luaConsole) luaConsole.MainFormForApi = _owner;
+			if (form is JsConsole jsConsole) jsConsole.MainFormForApi = _owner;
 		}
 
 		public T Load<T>(bool focus = true, string toolPath = "")
@@ -866,6 +867,8 @@ namespace BizHawk.Client.EmuHawk
 		public SNESGraphicsDebugger SNESGraphicsDebugger => GetTool<SNESGraphicsDebugger>();
 
 		public LuaConsole LuaConsole => GetTool<LuaConsole>();
+
+		public JsConsole JsConsole => GetTool<JsConsole>();
 
 		public TAStudio TAStudio => GetTool<TAStudio>();
 
