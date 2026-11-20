@@ -305,15 +305,17 @@ namespace BizHawk.Client.Common
 			ApiGroup prohibitedApis,
 			string name = null)
 		{
-			var nlf = new NamedJsFunction(function, theEvent, _defaultExceptionCallback, CurrentFile, this, prohibitedApis, name);
-			CurrentFile.Functions.Add(nlf);
+			var file = RequireCurrentFile("event registration");
+			var nlf = new NamedJsFunction(function, theEvent, _defaultExceptionCallback, file, this, prohibitedApis, name);
+			file.Functions.Add(nlf);
 			return nlf;
 		}
 
 		private bool RemoveNamedFunctionMatching(Func<INamedJsFunction, bool> predicate)
 		{
-			if (CurrentFile.Functions.FirstOrDefault(predicate) is not NamedJsFunction nlf) return false;
-			CurrentFile.Functions.Remove(nlf);
+			var file = RequireCurrentFile("event removal");
+			if (file.Functions.FirstOrDefault(predicate) is not NamedJsFunction nlf) return false;
+			file.Functions.Remove(nlf);
 			return true;
 		}
 
@@ -424,7 +426,10 @@ namespace BizHawk.Client.Common
 						waitForFrame = false;
 						lf.FrameWaiting = false;
 						FrameAdvanceRequested = false;
-						tcs.TrySetResult(null);
+						// ClearScript runs promise continuations synchronously when the
+						// TaskCompletionSource completes. Resume inside Sandbox so
+						// CurrentFile is set for the next await emu.frameadvance()/yield().
+						Sandbox(lf, () => tcs.TrySetResult(null));
 						shouldStop = lf.ScriptTask?.IsCompleted == true && !lf.ShouldKeepRunning();
 					}
 					else if (lf.ScriptTask is null)
@@ -513,6 +518,22 @@ namespace BizHawk.Client.Common
 			_logToJsConsoleCallback(outputs);
 		}
 
+		private JsFile RequireCurrentFile(string apiName)
+		{
+			if (CurrentFile is { } current) return current;
+
+			// Fallback if a promise continuation somehow runs outside Sandbox:
+			// prefer the single in-flight script that is cooperatively yielding.
+			var candidates = ScriptList
+				.Where(static f => f.State is JsFile.RunState.Running
+					&& f.ScriptTask is { IsCompleted: false })
+				.ToList();
+			if (candidates.Count == 1) return candidates[0];
+
+			throw new InvalidOperationException(
+				$"{apiName} requires an active script context (CurrentFile was null)");
+		}
+
 		private Task FrameAdvanceAsync()
 		{
 			if (ProhibitedApis.HasFlag(ApiGroup.YIELDING))
@@ -521,7 +542,7 @@ namespace BizHawk.Client.Common
 			}
 
 			FrameAdvanceRequested = true;
-			var file = CurrentFile;
+			var file = RequireCurrentFile("emu.frameadvance()");
 			var tcs = new TaskCompletionSource<object>();
 			file.YieldCompletion = tcs;
 			file.YieldIsFrameAdvance = true;
@@ -536,7 +557,7 @@ namespace BizHawk.Client.Common
 				throw new InvalidOperationException("emu.yield() is not allowed during any callbacks");
 			}
 
-			var file = CurrentFile;
+			var file = RequireCurrentFile("emu.yield()");
 			var tcs = new TaskCompletionSource<object>();
 			file.YieldCompletion = tcs;
 			file.YieldIsFrameAdvance = false;

@@ -53,6 +53,39 @@ namespace BizHawk.Tests.Client.Common.js
 			context.RunFrameWaiting();
 			Assert.IsTrue(context.loggedMessages.Count >= 2);
 			Assert.AreEqual("frame", context.loggedMessages[0]);
+			// Continuations after await emu.frameadvance() must not NRE on CurrentFile.
+			Assert.IsFalse(context.loggedMessages.Exists(static m =>
+				m.Contains("NullReferenceException", StringComparison.Ordinal)
+				|| m.Contains("CurrentFile was null", StringComparison.Ordinal)),
+				"messages: " + string.Join(" || ", context.loggedMessages));
+		}
+
+		[TestMethod]
+		public void FrameAdvanceLoopSurvivesMultipleResumes()
+		{
+			if (!JsLibraries.IsAvailable)
+			{
+				Assert.Inconclusive($"V8 natives unavailable (skip): {JsLibraries.AvailabilityError}");
+				return;
+			}
+
+			JsTestContext context = new();
+			context.AddScript("hello_frameadvance_loop.js", true);
+			context.RunYielding();
+			Assert.AreEqual(JsFile.RunState.Running, context.GetScriptState(0));
+			for (var i = 0; i < 5; i++)
+			{
+				context.RunFrameWaiting();
+			}
+
+			var tickCount = context.loggedMessages.FindAll(static m => m.StartsWith("tick @", StringComparison.Ordinal)).Count;
+			Assert.IsTrue(tickCount >= 3,
+				"messages: " + string.Join(" || ", context.loggedMessages));
+			Assert.IsFalse(context.loggedMessages.Exists(static m =>
+				m.Contains("NullReferenceException", StringComparison.Ordinal)
+				|| m.Contains("ScriptEngineException", StringComparison.Ordinal)),
+				"messages: " + string.Join(" || ", context.loggedMessages));
+			Assert.AreEqual(JsFile.RunState.Running, context.GetScriptState(0));
 		}
 
 		[TestMethod]
